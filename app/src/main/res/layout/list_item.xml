@@ -43,7 +43,7 @@
                 android:layout_weight="1"
                 android:gravity="top"
                 android:textAppearance="?android:textAppearanceMedium"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 tools:text="one" />
 
         </LinearLayout>

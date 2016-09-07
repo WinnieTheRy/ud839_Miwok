@@ -6,19 +6,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
+
 //extends arrayadapter<Word> stating that we are expecting only to use arrayadapter<word> as an input
 public class WordAdapter extends ArrayAdapter<Word> {
 
+    private int mBackgroudColor;
 
-    public WordAdapter(Activity context, ArrayList<Word> wordsArray) {
+    public WordAdapter(Activity context, ArrayList<Word> wordsArray, int backgroundColor) {
 
         //we are calling the super classes ArrayAdapter constructor here
         //setting 0 since we are using a custom view
         super(context, 0, wordsArray);
+
+        mBackgroudColor = backgroundColor;
     }
 
     @Override
@@ -30,9 +36,12 @@ public class WordAdapter extends ArrayAdapter<Word> {
             listItemView = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);
         } //once the listitemview is inflated in the continues on to making the textviews
 
-        //getting the position of the curent word from the constructors array
+        //getting the position of the curent word from the arraylist
         //Word curentWord_2 = (Word) this.getItem(position);
         Word currentWord = getItem(position);
+
+        LinearLayout linearLayout = (LinearLayout)listItemView.findViewById(R.id.linear_layout_background_color);
+        linearLayout.setBackgroundColor(mBackgroudColor);
 
         TextView miwokTextView = (TextView) listItemView.findViewById(R.id.miwok_text_view);
         //get the current word from the arraylist and set it to the textview
@@ -40,6 +49,22 @@ public class WordAdapter extends ArrayAdapter<Word> {
 
         TextView defaultTextView = (TextView) listItemView.findViewById(R.id.default_text_view);
         defaultTextView.setText(currentWord.getDefaultTranslation());
+
+
+        ImageView imageView = (ImageView) listItemView.findViewById(R.id.image_view);
+
+        //checks if the the imageview has and image or not
+        if (currentWord.hasImage()) {
+            imageView.setImageResource(currentWord.getImageResourceId());
+
+            //if the previous view was hidden through recycling we want to
+            // make sure the view is now visible
+            imageView.setVisibility(View.VISIBLE);
+
+        } else {
+            //sets the imageView to gone, it doesnt take up any extra space
+            imageView.setVisibility(View.GONE);
+        }
 
         return listItemView;
     }

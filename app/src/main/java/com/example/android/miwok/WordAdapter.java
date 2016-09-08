@@ -2,6 +2,7 @@ package com.example.android.miwok;
 
 
 import android.app.Activity;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,8 +41,17 @@ public class WordAdapter extends ArrayAdapter<Word> {
         //Word curentWord_2 = (Word) this.getItem(position);
         Word currentWord = getItem(position);
 
-        LinearLayout linearLayout = (LinearLayout)listItemView.findViewById(R.id.linear_layout_background_color);
-        linearLayout.setBackgroundColor(mBackgroudColor);
+        //Set the theme color for the list item
+        View textContainer = listItemView.findViewById(R.id.linear_layout_background_color);
+        //View textContainer2 = (View) listItemView.findViewById(R.id.linear_layout_background_color);
+        /*
+        The (View typecast is redundant so it is removed in the textContainer
+         */
+
+        //Find the color that the resouce ID Maps to
+        int color = ContextCompat.getColor(getContext(), mBackgroudColor);
+        //Set the background color of the text container
+        textContainer.setBackgroundColor(color);
 
         TextView miwokTextView = (TextView) listItemView.findViewById(R.id.miwok_text_view);
         //get the current word from the arraylist and set it to the textview

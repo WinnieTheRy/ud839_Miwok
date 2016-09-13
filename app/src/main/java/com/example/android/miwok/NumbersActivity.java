@@ -1,13 +1,18 @@
 package com.example.android.miwok;
 
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
 public class NumbersActivity extends AppCompatActivity {
+
+    private MediaPlayer mMediaPlayer;
 
 
     @Override
@@ -35,7 +40,8 @@ public class NumbersActivity extends AppCompatActivity {
         //Log.v("NumbersActivity", "Word at index 1 " + englishWords[0]);
         //Log.v("NumbersActivity", "Word at index 2 ," + words[1]);
 
-        ArrayList<Word> words = new ArrayList<Word>();
+        //make arraylist final so the onclicklistner anonynous class can acces the arraylist
+        final ArrayList<Word> words = new ArrayList<Word>();
 
         //words.add("one");
         words.add(new Word("one", "lutti", R.drawable.number_one));
@@ -63,6 +69,7 @@ public class NumbersActivity extends AppCompatActivity {
         // words_listayout file.
         ListView listView = (ListView) findViewById(R.id.list);
 
+
         //GridView gridView = (GridView)findViewById(R.id.grid);
 
         // Make the {@link ListView} use the {@link ArrayAdapter} we created above, so that the
@@ -70,6 +77,18 @@ public class NumbersActivity extends AppCompatActivity {
         // Do this by calling the setAdapter method on the {@link ListView} object and pass in
         // 1 argument, which is the {@link ArrayAdapter} with the variable name itemsAdapter.
         listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+                Word wordPosition = words.get(position);
+
+                mMediaPlayer = MediaPlayer.create(NumbersActivity.this, wordPosition.getSongResourceId());
+                mMediaPlayer.start();
+
+            }
+        });
 
         //gridView.setAdapter(itemsAdapter);
 

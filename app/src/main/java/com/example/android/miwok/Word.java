@@ -18,6 +18,8 @@ public class Word {
     //set to -1 because VISIBLE, INVISIBLE and GONE use variables other then -1
     private static final int NO_IMAGE_PROVIDED = -1;
 
+    private int mSongResourceId;
+
     /**
      * Create a word constructor
      *
@@ -41,6 +43,22 @@ public class Word {
         mDefaultTranslation = defaultTranslation;
         mMiwokTranslation = miwokTranslation;
         mImageResourceId = imageResourceId;
+
+    }
+
+    /**
+     *
+     * @param defaultTranslation is the word in default language
+     * @param miwokTranslation is the word in miwok translation
+     * @param imageResourceId is the image reasource id for the image associated with the word
+     * @param songResourceId is the song resource id for the image associated with the word
+     */
+    public Word(String defaultTranslation, String miwokTranslation, int imageResourceId, int songResourceId){
+
+        mDefaultTranslation = defaultTranslation;
+        mMiwokTranslation = miwokTranslation;
+        mImageResourceId = imageResourceId;
+        mSongResourceId = songResourceId;
     }
 
     //Get the default translation for the word
@@ -65,6 +83,11 @@ public class Word {
      */
     public boolean hasImage(){
         return mImageResourceId != NO_IMAGE_PROVIDED;
+    }
+
+    //gets the resource id for the song
+    public int getSongResourceId(){
+        return mSongResourceId;
     }
 
 }

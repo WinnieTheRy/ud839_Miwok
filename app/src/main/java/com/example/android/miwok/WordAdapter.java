@@ -2,6 +2,7 @@ package com.example.android.miwok;
 
 
 import android.app.Activity;
+import android.media.MediaPlayer;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 public class WordAdapter extends ArrayAdapter<Word> {
 
     private int mBackgroudColor;
+    private MediaPlayer mMediaPlayer;
 
     public WordAdapter(Activity context, ArrayList<Word> wordsArray, int backgroundColor) {
 
@@ -41,7 +43,7 @@ public class WordAdapter extends ArrayAdapter<Word> {
 
         //getting the position of the curent word from the arraylist
         //Word curentWord_2 = (Word) this.getItem(position);
-        Word currentWord = getItem(position);
+        final Word currentWord = getItem(position);
 
         //Set the theme color for the list item
         View textContainer = listItemView.findViewById(R.id.linear_layout_background_color);
@@ -77,6 +79,16 @@ public class WordAdapter extends ArrayAdapter<Word> {
             //sets the imageView to gone, it doesnt take up any extra space
             imageView.setVisibility(View.GONE);
         }
+
+        TextView clickToPlay = (TextView) listItemView.findViewById(R.id.text_view_click);
+        clickToPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMediaPlayer = MediaPlayer.create(getContext(), currentWord.getSongResourceId());
+                mMediaPlayer.start();
+            }
+        });
+
 
         return listItemView;
     }

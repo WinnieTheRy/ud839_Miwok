@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -28,14 +29,14 @@ public class FamilyActivity extends AppCompatActivity {
          */
         words.add(new Word("father", "әpә", R.drawable.family_father, R.raw.family_father)); //array list 0 storing instance of word class with those words in it
         words.add(new Word("mother", "әṭa", R.drawable.family_mother, R.raw.family_mother));
-        words.add(new Word("son", "angsi", R.drawable.family_son));
-        words.add(new Word("daughter", "tune", R.drawable.family_daughter));
-        words.add(new Word("older brother", "taachi", R.drawable.family_older_brother));
-        words.add(new Word("younger brother", "chalitti", R.drawable.family_younger_brother));
-        words.add(new Word("older sister", "teṭe", R.drawable.family_older_sister));
-        words.add(new Word("younger sister", "kolliti", R.drawable.family_younger_sister));
-        words.add(new Word("grandmother", "ama", R.drawable.family_grandmother));
-        words.add(new Word("grandfather", "paapa", R.drawable.family_grandfather));
+        words.add(new Word("son", "angsi", R.drawable.family_son, R.raw.family_son));
+        words.add(new Word("daughter", "tune", R.drawable.family_daughter, R.raw.family_daughter));
+        words.add(new Word("older brother", "taachi", R.drawable.family_older_brother, R.raw.family_older_brother));
+        words.add(new Word("younger brother", "chalitti", R.drawable.family_younger_brother, R.raw.family_younger_brother));
+        words.add(new Word("older sister", "teṭe", R.drawable.family_older_sister, R.raw.family_older_sister));
+        words.add(new Word("younger sister", "kolliti", R.drawable.family_younger_sister, R.raw.family_younger_sister));
+        words.add(new Word("grandmother", "ama", R.drawable.family_grandmother, R.raw.family_grandmother));
+        words.add(new Word("grandfather", "paapa", R.drawable.family_grandfather, R.raw.family_grandfather));
 
 
         Log.v("FamilyActivity", "father default: " + words.get(0).getDefaultTranslation() + " and father miwok: " + words.get(0).getMiwokTranslation());
@@ -61,6 +62,15 @@ public class FamilyActivity extends AppCompatActivity {
                 mMediaPlayer = MediaPlayer.create(FamilyActivity.this, wordPosition.getSongResourceId()); //resourceid is an int
 
                 mMediaPlayer.start();
+
+                mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+                    public void onCompletion(MediaPlayer mp) {
+                        Toast.makeText(FamilyActivity.this, "Im done", Toast.LENGTH_SHORT).show();
+                    }
+
+
+                });
             }
         });
 

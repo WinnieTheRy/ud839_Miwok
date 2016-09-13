@@ -26,25 +26,26 @@ public class Word {
      * @param defaultTranslation is the word in default language
      * @param miwokTranslation   Is the word  in miwok language
      */
-    public Word(String defaultTranslation, String miwokTranslation) {
+    public Word(String defaultTranslation, String miwokTranslation, int songResourceId) {
 
         mDefaultTranslation = defaultTranslation;
         mMiwokTranslation = miwokTranslation;
+        mSongResourceId = songResourceId;
     }
 
-    /**
-     *
-     * @param defaultTranslation is the word in default language
-     * @param miwokTranslation is the word in miwok translation
-     * @param imageResourceId is the image reasource id for the image associated with the word
-     */
-    public Word(String defaultTranslation, String miwokTranslation, int imageResourceId){
-
-        mDefaultTranslation = defaultTranslation;
-        mMiwokTranslation = miwokTranslation;
-        mImageResourceId = imageResourceId;
-
-    }
+//    /**
+//     *
+//     * @param defaultTranslation is the word in default language
+//     * @param miwokTranslation is the word in miwok translation
+//     * @param imageResourceId is the image reasource id for the image associated with the word
+//     */
+//    public Word(String defaultTranslation, String miwokTranslation, int imageResourceId){
+//
+//        mDefaultTranslation = defaultTranslation;
+//        mMiwokTranslation = miwokTranslation;
+//        mImageResourceId = imageResourceId;
+//
+//    }
 
     /**
      *

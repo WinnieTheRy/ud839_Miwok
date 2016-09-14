@@ -16,6 +16,13 @@ public class FamilyActivity extends AppCompatActivity {
 
     private MediaPlayer mMediaPlayer;
 
+    private MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
+        @Override
+        public void onCompletion(MediaPlayer mp) {
+            releaseMediaPlayer();
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,21 +65,35 @@ public class FamilyActivity extends AppCompatActivity {
                 //getting the position of the item being clicked in the listview
                 Word wordPosition = words.get(position);
 
+                releaseMediaPlayer();
+
                 //assinging that position to the audio file
                 mMediaPlayer = MediaPlayer.create(FamilyActivity.this, wordPosition.getSongResourceId()); //resourceid is an int
 
                 mMediaPlayer.start();
 
-                mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                //shuts down mediaplayer once audio has finished playing
+                mMediaPlayer.setOnCompletionListener(mCompletionListener);
 
-                    public void onCompletion(MediaPlayer mp) {
-                        Toast.makeText(FamilyActivity.this, "Im done", Toast.LENGTH_SHORT).show();
-                    }
-
-
-                });
             }
         });
 
+    }
+
+    /**
+     * Clean up the media player by releasing its resources.
+     */
+    private void releaseMediaPlayer() {
+        // If the media player is not null, then it may be currently playing a sound.
+        if (mMediaPlayer != null) {
+            // Regardless of the current state of the media player, release its resources
+            // because we no longer need it.
+            mMediaPlayer.release();
+
+            // Set the media player back to null. For our code, we've decided that
+            // setting the media player to null is an easy way to tell that the media player
+            // is not configured to play an audio file at the moment.
+            mMediaPlayer = null;
+        }
     }
 }

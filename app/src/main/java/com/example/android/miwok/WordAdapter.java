@@ -80,14 +80,14 @@ public class WordAdapter extends ArrayAdapter<Word> {
             imageView.setVisibility(View.GONE);
         }
 
-        TextView clickToPlay = (TextView) listItemView.findViewById(R.id.text_view_click);
-        clickToPlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mMediaPlayer = MediaPlayer.create(getContext(), currentWord.getSongResourceId());
-                mMediaPlayer.start();
-            }
-        });
+//        TextView clickToPlay = (TextView) listItemView.findViewById(R.id.text_view_click);
+//        clickToPlay.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mMediaPlayer = MediaPlayer.create(getContext(), currentWord.getSongResourceId());
+//                mMediaPlayer.start();
+//            }
+//        });
 
 
         return listItemView;

@@ -17,6 +17,8 @@ public class NumbersActivity extends AppCompatActivity {
 
     private MediaPlayer mMediaPlayer;
 
+    private AudioManager mAudioManager;
+
     private static Context mContext;
 
     private MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
@@ -27,7 +29,7 @@ public class NumbersActivity extends AppCompatActivity {
     };
 
     //Used to pause, resume and stop audio depending if other apps request audio focus
-    private AudioManager.OnAudioFocusChangeListener mAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+    private AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
         @Override
         public void onAudioFocusChange(int focusChange) {
 
@@ -110,6 +112,11 @@ public class NumbersActivity extends AppCompatActivity {
         // 1 argument, which is the {@link ArrayAdapter} with the variable name itemsAdapter.
         listView.setAdapter(adapter);
 
+        // Create and setup the {@link AudioManager} to request audio focus
+        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
+        //AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -118,9 +125,7 @@ public class NumbersActivity extends AppCompatActivity {
 
                 releaseMediaPlayer();
 
-                AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
-
-                int result = am.requestAudioFocus(mAudioFocusChangeListener,
+                int result = mAudioManager.requestAudioFocus(mOnAudioFocusChangeListener,
                         //use the music steam to play back the miwok sounds
                         AudioManager.STREAM_MUSIC,
                         //Request permanent focus of sound
@@ -129,10 +134,12 @@ public class NumbersActivity extends AppCompatActivity {
                 if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
                     mMediaPlayer = MediaPlayer.create(NumbersActivity.this, wordPosition.getSongResourceId());
                     mMediaPlayer.start();
-                }
 
-                //shuts down mediaplayer once audio has finished playing
-                mMediaPlayer.setOnCompletionListener(mCompletionListener);
+                    // Setup a listener on the media player, so that we can stop and release the
+                    // media player once the sound has finished playing.
+                    mMediaPlayer.setOnCompletionListener(mCompletionListener);
+
+                }
 
 
             }
@@ -197,6 +204,10 @@ public class NumbersActivity extends AppCompatActivity {
             // setting the media player to null is an easy way to tell that the media player
             // is not configured to play an audio file at the moment.
             mMediaPlayer = null;
+
+            // Regardless of whether or not we were granted audio focus, abandon it. This also
+            // unregisters the AudioFocusChangeListener so we don't get anymore callbacks.
+            mAudioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
         }
     }
 

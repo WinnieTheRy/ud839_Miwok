@@ -19,30 +19,45 @@ public class NumbersActivity extends AppCompatActivity {
 
     private AudioManager mAudioManager;
 
-    private static Context mContext;
-
     private MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
+        //callback methode
         @Override
         public void onCompletion(MediaPlayer mp) {
             releaseMediaPlayer();
         }
     };
 
+    //Is a global vairable so we only need to declaring it once instead everytime we click on a sound to play
     //Used to pause, resume and stop audio depending if other apps request audio focus
     private AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+
+        //callback mecthode
+
+        /**
+         *
+         * This methode is only called if we loose audio Focus and have just gainged it back,
+         * be it after a phone call or alarm, if it is not for a short period of time then we will
+         * relase the mediaPlayer all together
+         *
+         * @param focusChange
+         */
         @Override
         public void onAudioFocusChange(int focusChange) {
 
             if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT || focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
                 //pause
                 mMediaPlayer.pause();
+                //restart trasnlation so that the user can hear it again
                 mMediaPlayer.seekTo(0);
+
             } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
                 //stop audio and realease mediaPlayer
                 releaseMediaPlayer();
+                Log.v("NumbersActivity", "audio focus, Realease Media Player");
             } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
                 //resume
                 mMediaPlayer.start();
+                Log.v("NumbersActivity", "Audio Focus, mediaplayer started");
             }
 
         }
@@ -128,12 +143,14 @@ public class NumbersActivity extends AppCompatActivity {
                 int result = mAudioManager.requestAudioFocus(mOnAudioFocusChangeListener,
                         //use the music steam to play back the miwok sounds
                         AudioManager.STREAM_MUSIC,
-                        //Request permanent focus of sound
-                        AudioManager.AUDIOFOCUS_GAIN);
+                        //Request temporary focus of sound
+                        AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
 
                 if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
                     mMediaPlayer = MediaPlayer.create(NumbersActivity.this, wordPosition.getSongResourceId());
                     mMediaPlayer.start();
+
+                    Log.v("NumbersActivity", "Audio focus granted, audio playing");
 
                     // Setup a listener on the media player, so that we can stop and release the
                     // media player once the sound has finished playing.
@@ -189,11 +206,21 @@ public class NumbersActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        releaseMediaPlayer();
+
+        Log.v("NumbersActivity", "On Stop Called, Media Player stopped");
+    }
 
     /**
      * Clean up the media player by releasing its resources.
      */
     private void releaseMediaPlayer() {
+
+        Log.v("NumbersActivity", "ReleaseMediaPLayer methode called");
         // If the media player is not null, then it may be currently playing a sound.
         if (mMediaPlayer != null) {
             // Regardless of the current state of the media player, release its resources

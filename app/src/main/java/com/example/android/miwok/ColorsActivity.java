@@ -1,8 +1,11 @@
 package com.example.android.miwok;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -14,10 +17,35 @@ public class ColorsActivity extends AppCompatActivity {
 
     private MediaPlayer mMediaPlayer;
 
+    private AudioManager mAudioManager;
+
     private MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mp) {
             releaseMediaPlayer();
+        }
+    };
+
+    private AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+        @Override
+        public void onAudioFocusChange(int focusChange) {
+
+            if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT || focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
+                //pause
+                mMediaPlayer.pause();
+                //restart trasnlation so that the user can hear it again
+                mMediaPlayer.seekTo(0);
+
+            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                //stop audio and realease mediaPlayer
+                releaseMediaPlayer();
+                Log.v("NumbersActivity", "audio focus, Realease Media Player");
+            } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                //resume
+                mMediaPlayer.start();
+                Log.v("NumbersActivity", "Audio Focus, mediaplayer started");
+            }
+
         }
     };
 
@@ -41,6 +69,8 @@ public class ColorsActivity extends AppCompatActivity {
 
         ListView listView = (ListView) findViewById(R.id.list);
 
+        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -51,11 +81,16 @@ public class ColorsActivity extends AppCompatActivity {
 
                 releaseMediaPlayer();
 
-                mMediaPlayer = MediaPlayer.create(ColorsActivity.this, wordPosition.getSongResourceId());
-                mMediaPlayer.start();
+                int resultOfAudioFocus = mAudioManager.requestAudioFocus(mOnAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
 
-                //shuts down mediaplayer once audio has finished playing
-                mMediaPlayer.setOnCompletionListener(mCompletionListener);
+                if (resultOfAudioFocus == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+
+                    mMediaPlayer = MediaPlayer.create(ColorsActivity.this, wordPosition.getSongResourceId());
+                    mMediaPlayer.start();
+
+                    //shuts down mediaplayer once audio has finished playing
+                    mMediaPlayer.setOnCompletionListener(mCompletionListener);
+                }
 
 
             }
@@ -77,6 +112,10 @@ public class ColorsActivity extends AppCompatActivity {
             // setting the media player to null is an easy way to tell that the media player
             // is not configured to play an audio file at the moment.
             mMediaPlayer = null;
+
+            // Regardless of whether or not we were granted audio focus, abandon it. This also
+            // unregisters the AudioFocusChangeListener so we don't get anymore callbacks.
+            mAudioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
         }
     }
 }

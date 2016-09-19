@@ -48,7 +48,7 @@ public class FamilyActivity extends AppCompatActivity {
 
         Log.v("FamilyActivity", "father default: " + words.get(0).getDefaultTranslation() + " and father miwok: " + words.get(0).getMiwokTranslation());
 
-        //creating word adapter to liknk between the arraylist and the listview
+        //creating word adapter to link between the arraylist and the listview
         WordAdapter adapter = new WordAdapter(
                 this,                       //context for the activitity
                 words,                      //Items to be displayed

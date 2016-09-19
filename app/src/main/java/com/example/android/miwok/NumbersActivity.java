@@ -1,5 +1,7 @@
 package com.example.android.miwok;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,10 +17,32 @@ public class NumbersActivity extends AppCompatActivity {
 
     private MediaPlayer mMediaPlayer;
 
+    private static Context mContext;
+
     private MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mp) {
             releaseMediaPlayer();
+        }
+    };
+
+    //Used to pause, resume and stop audio depending if other apps request audio focus
+    private AudioManager.OnAudioFocusChangeListener mAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+        @Override
+        public void onAudioFocusChange(int focusChange) {
+
+            if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT || focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
+                //pause
+                mMediaPlayer.pause();
+                mMediaPlayer.seekTo(0);
+            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                //stop audio and realease mediaPlayer
+                releaseMediaPlayer();
+            } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                //resume
+                mMediaPlayer.start();
+            }
+
         }
     };
 
@@ -94,8 +118,18 @@ public class NumbersActivity extends AppCompatActivity {
 
                 releaseMediaPlayer();
 
-                mMediaPlayer = MediaPlayer.create(NumbersActivity.this, wordPosition.getSongResourceId());
-                mMediaPlayer.start();
+                AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+
+                int result = am.requestAudioFocus(mAudioFocusChangeListener,
+                        //use the music steam to play back the miwok sounds
+                        AudioManager.STREAM_MUSIC,
+                        //Request permanent focus of sound
+                        AudioManager.AUDIOFOCUS_GAIN);
+
+                if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                    mMediaPlayer = MediaPlayer.create(NumbersActivity.this, wordPosition.getSongResourceId());
+                    mMediaPlayer.start();
+                }
 
                 //shuts down mediaplayer once audio has finished playing
                 mMediaPlayer.setOnCompletionListener(mCompletionListener);
@@ -147,6 +181,7 @@ public class NumbersActivity extends AppCompatActivity {
 
 
     }
+
 
     /**
      * Clean up the media player by releasing its resources.

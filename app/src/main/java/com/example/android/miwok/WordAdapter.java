@@ -78,6 +78,7 @@ public class WordAdapter extends ArrayAdapter<Word> {
         } else {
             //sets the imageView to gone, it doesnt take up any extra space
             imageView.setVisibility(View.GONE);
+
         }
 
 //        TextView clickToPlay = (TextView) listItemView.findViewById(R.id.text_view_click);

@@ -147,20 +147,20 @@ public class NumbersActivity extends AppCompatActivity {
                         AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
 
                 if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-                    mMediaPlayer = MediaPlayer.create(NumbersActivity.this, wordPosition.getSongResourceId());
-                    mMediaPlayer.start();
+            mMediaPlayer = MediaPlayer.create(NumbersActivity.this, wordPosition.getSongResourceId());
+            mMediaPlayer.start();
 
-                    Log.v("NumbersActivity", "Audio focus granted, audio playing");
+            Log.v("NumbersActivity", "Audio focus granted, audio playing");
 
-                    // Setup a listener on the media player, so that we can stop and release the
-                    // media player once the sound has finished playing.
-                    mMediaPlayer.setOnCompletionListener(mCompletionListener);
+            // Setup a listener on the media player, so that we can stop and release the
+            // media player once the sound has finished playing.
+            mMediaPlayer.setOnCompletionListener(mCompletionListener);
 
-                }
+        }
 
 
-            }
-        });
+    }
+});
 
         //gridView.setAdapter(itemsAdapter);
 

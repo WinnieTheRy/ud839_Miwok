@@ -20,6 +20,8 @@ public class FamilyActivity extends AppCompatActivity {
 
     private AudioManager mAudioManager;
 
+    private String JustATest;
+
     private MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mp) {

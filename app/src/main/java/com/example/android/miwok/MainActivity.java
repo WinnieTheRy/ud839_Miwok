@@ -1,6 +1,7 @@
 package com.example.android.miwok;
 
 import android.content.Intent;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,47 +14,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Find the view that shows the number category
-        TextView numberTextView = (TextView) findViewById(R.id.numbers);
-        //interface: onClickListener
-        numberTextView.setOnClickListener(new View.OnClickListener() {
-            //abstract methode: onClick
-            @Override
-            public void onClick(View v) {
-                //Create a new intent to open the numbers activity
-                Intent numberActivity = new Intent(MainActivity.this, NumbersActivity.class);
-                //start the new activity
-                startActivity(numberActivity);
-            }
-        });
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
 
-        TextView phrasesTextView = (TextView) findViewById(R.id.phrases);
-        phrasesTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent phrasesActivity = new Intent(MainActivity.this, PhrasesActivity.class);
-                startActivity(phrasesActivity);
-            }
-        });
+        // Create an adapter that knows which fragment should be shown on each page
+        SimpleFragmentPagerAdapter adapter = new SimpleFragmentPagerAdapter(getSupportFragmentManager());
 
-
-        TextView colorsTextView = (TextView) findViewById(R.id.colors);
-        colorsTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent colorsActvity = new Intent(MainActivity.this, ColorsActivity.class);
-                startActivity(colorsActvity);
-            }
-        });
-
-
-        TextView familyTextView = (TextView) findViewById(R.id.family);
-        familyTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent familyActivity = new Intent(MainActivity.this, FamilyActivity.class);
-                startActivity(familyActivity);
-            }
-        });
+        // Set the adapter onto the view pager
+        viewPager.setAdapter(adapter);
     }
 }
